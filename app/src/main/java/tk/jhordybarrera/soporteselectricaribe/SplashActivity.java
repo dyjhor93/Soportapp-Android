@@ -13,7 +13,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        handler.postDelayed(() -> startLogin(null), 3000);   //5 seconds
+        handler.postDelayed(() -> startLogin(null), 3000);
 
     }
     public void startLogin(View v){
