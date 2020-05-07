@@ -2,4 +2,5 @@
 <resources>
     <dimen name="t_tittle">30sp</dimen>
     <dimen name="img">150dp</dimen>
+    <dimen name="internal">10dp</dimen>
 </resources>

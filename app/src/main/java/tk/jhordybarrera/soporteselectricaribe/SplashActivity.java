@@ -1,5 +1,4 @@
 package tk.jhordybarrera.soporteselectricaribe;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,12 +13,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                startLogin(null);
-            }
-
-        }, 3000);   //5 seconds
+        handler.postDelayed(() -> startLogin(null), 3000);   //5 seconds
 
     }
     public void startLogin(View v){
