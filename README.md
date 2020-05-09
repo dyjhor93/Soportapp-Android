@@ -14,8 +14,9 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 _Si quieres colaborar y no sabes como revisa este enlace_
 
 
-*  [Aportar en github](https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317)  - 
+*  <a href="http://example.com/" target="_blank">Aportar en github</a> - los 6 pasos que debes seguir para comenzar a hacer aportes y dejar el miedo a un lado
 
+### Esta documentación se encuentra en proceso de edición y redacción....
 
 ### Instalación 🔧
 
@@ -66,7 +67,7 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 * [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - El framework web usado
 * [Maven](https://maven.apache.org/) - Manejador de dependencias
 * [ROME](https://rometools.github.io/rome/) - Usado para generar RSS
-
+<a href="http://example.com/" target="_blank">Hello, world!</a>
 ## Contribuyendo 🖇️
 
 Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
@@ -78,7 +79,7 @@ Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](ht
 ## Versionado 📌
 
 Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).
-
+los 6 pasos que debes seguir para comenzar a hacer aportes y dejar el miedo a un lado
 ## Autores ✒️
 
 _Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
@@ -96,7 +97,7 @@ Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md
 
 * Comenta a otros sobre este proyecto 📢
 * Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
-* Da las gracias públicamente 🤓.
+* Da las gracias públicamente 🤓.los 6 pasos que debes seguir para comenzar a hacer aportes y dejar el miedo a un lado
 * etc.
 
 
