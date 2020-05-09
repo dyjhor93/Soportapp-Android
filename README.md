@@ -14,7 +14,7 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 _Si quieres colaborar y no sabes como revisa este enlace_
 
 ```
-https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317
+[Aportar en github](https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317)
 ```
 
 ### Instalación 🔧
@@ -72,7 +72,7 @@ _Menciona las herramientas que utilizaste para crear tu proyecto_
 Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
 
 ## Wiki 📖
-
+https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317
 Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki)
 
 ## Versionado 📌
