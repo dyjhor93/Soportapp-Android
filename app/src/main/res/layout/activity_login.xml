@@ -1,36 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity"
-    android:orientation="vertical"
-    android:gravity="center"
     android:background="@drawable/background_activities"
+    android:gravity="center"
+    android:orientation="vertical"
     android:padding="@dimen/t_tittle"
-    >
+    tools:context=".LoginActivity">
+
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/t_tittle"
+        android:autofillHints="@string/app_name"
         android:background="@drawable/bg_edittext"
         android:gravity="center"
-        android:inputType="textEmailAddress"
-        android:autofillHints="@string/app_name"
         android:hint="@string/email"
-        />
+        android:inputType="textEmailAddress" />
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/t_tittle"
+        android:autofillHints="@string/app_name"
         android:background="@drawable/bg_edittext"
         android:gravity="center"
-        android:inputType="textPassword"
-        android:autofillHints="@string/app_name"
         android:hint="@string/pass"
-        />
+        android:inputType="textPassword" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/log"/>
+        android:background="@drawable/bg_button"
+        android:onClick="login"
+        android:text="@string/log" />
 </LinearLayout>
