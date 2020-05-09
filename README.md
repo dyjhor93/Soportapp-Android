@@ -13,9 +13,9 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 
 _Si quieres colaborar y no sabes como revisa este enlace_
 
-```
-[Aportar en github](https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317)
-```
+
+*  [Aportar en github](https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317)  - 
+
 
 ### Instalación 🔧
 
