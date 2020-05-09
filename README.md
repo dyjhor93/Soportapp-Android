@@ -11,10 +11,10 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 
 ### Pre-requisitos 📋
 
-_Necesitas git para contribuir en los cambios, puedes clonarlo usando este comando en terminal_
+_Si quieres colaborar y no sabes como revisa este enlace_
 
 ```
-git clone https://github.com/dyjhor93/SoportesElectricaribe.git
+https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317
 ```
 
 ### Instalación 🔧
