@@ -14,7 +14,7 @@ Mira **Deployment** para conocer como desplegar el proyecto.
 _Si quieres colaborar y no sabes como revisa este enlace_
 
 
-*  <a href="http://example.com/" target="_blank">Aportar en github</a> - los 6 pasos que debes seguir para comenzar a hacer aportes y dejar el miedo a un lado
+<a target='_blank' href='https://medium.com/@andresfernandosaa/c%C3%B3mo-hacer-mi-primer-aporte-en-la-comunidad-de-github-d644ae88c317'>Aportar en github</a> - los 6 pasos que debes seguir para comenzar a hacer aportes y dejar el miedo a un lado
 
 ### Esta documentación se encuentra en proceso de edición y redacción....
 
