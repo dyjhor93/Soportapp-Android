@@ -19,5 +19,6 @@ public class AddEditActivity extends AppCompatActivity {
         //si no se tiene todavia orden de servicio, se deja en blanco o se usa un check box solo se usa en nic
         //app_data//nic/{nic_img1.jpg, nic_img2.jpg, nic_video1.mp4, nic_x.x}
         //esto se controlara antes de subir al servidor
+
     }
 }
