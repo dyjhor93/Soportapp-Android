@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements Clickable{
         setContentView(R.layout.activity_main);
         addNewJob = findViewById(R.id.fab_main_add);
         recyclerViewOS = findViewById(R.id.recyclerViewOS);
-        recyclerViewOS.setHasFixedSize(true);
+        recyclerViewOS.setHasFixedSize(false);
         recyclerViewOS.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new OSAdapter(getData(),this);
         recyclerViewOS.setAdapter(mAdapter);

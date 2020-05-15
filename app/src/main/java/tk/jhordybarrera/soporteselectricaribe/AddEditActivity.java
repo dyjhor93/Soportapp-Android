@@ -4,15 +4,30 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class AddEditActivity extends AppCompatActivity {
-
+    private EditText os;
+    private EditText nic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit);
-
+        os = findViewById(R.id.clientOS);
+        nic = findViewById(R.id.clientNic);
+        load_data();
     }
+
+    private void load_data() {
+        if(getIntent().hasExtra("nic")){
+            nic.setText(getIntent().getStringExtra("nic"));
+        }
+        if(getIntent().hasExtra("os")){
+            os.setText(getIntent().getStringExtra("os"));
+        }
+    }
+
     public void add_photo_video(View v){
         //la idea es que se guarden en una carpeta que contenga el nic del usuario y dentro otra carpeta con la orden de servicio
         //app_data/nic/os/{os_img1.jpg, os_img2.jpg, os_video1.mp4, os_x.x}
