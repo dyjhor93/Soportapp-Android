@@ -6,9 +6,52 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_activities"
     tools:context=".AddEditActivity">
-
+<LinearLayout
+    android:padding="@dimen/t_tittle"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nic: "
+        android:textSize="25dp"
+        android:layout_marginVertical="5dp"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/t_tittle"
+        android:autofillHints="@string/app_name"
+        android:background="@drawable/bg_edittext"
+        android:gravity="center"
+        android:hint="@string/nic"
+        android:inputType="number"
+        android:id="@+id/clientNic"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OS: "
+        android:textSize="25dp"
+        android:layout_marginVertical="5dp"
+        />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/t_tittle"
+        android:autofillHints="@string/app_name"
+        android:background="@drawable/bg_edittext"
+        android:gravity="center"
+        android:hint="@string/os"
+        android:inputType="number"
+        android:id="@+id/clientOS"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_bombilla"
+        />
+</LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_photo_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

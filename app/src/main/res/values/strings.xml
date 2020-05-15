@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">Soportes Electricaribe</string>
+    <string name="app_name">SoportApp Electricaribe</string>
     <string name="email">Email</string>
     <string name="pass">Password</string>
     <string name="log">Enter</string>
+    <string name="nic">Nic</string>
+    <string name="os">OS</string>
 </resources>
