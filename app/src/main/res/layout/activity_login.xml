@@ -10,7 +10,14 @@
     android:padding="@dimen/t_tittle"
     tools:context=".LoginActivity">
 
+    <ImageView
+        android:layout_margin="10sp"
+        android:padding="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/img"
+        android:src="@drawable/logo"
 
+        />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -48,12 +48,12 @@ public class MainActivity extends AppCompatActivity implements Clickable{
 
         List<OSModel> OSModel = new ArrayList<>();
         //datos de prueba reemplazar por carga local sqlite
-        OSModel.add(new OSModel("Nic1","OS1"));
-        OSModel.add(new OSModel("Nic2","OS2"));
-        OSModel.add(new OSModel("Nic3"));
-        OSModel.add(new OSModel("Nic4"));
-        OSModel.add(new OSModel("Nic5","OS3"));
-        OSModel.add(new OSModel("Nic6"));
+        //OSModel.add(new OSModel("Nic1","OS1"));
+        //OSModel.add(new OSModel("Nic2","OS2"));
+        //OSModel.add(new OSModel("Nic3"));
+        //OSModel.add(new OSModel("Nic4"));
+        //OSModel.add(new OSModel("Nic5","OS3"));
+        //OSModel.add(new OSModel("Nic6"));
 
         return OSModel;
     }

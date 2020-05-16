@@ -12,6 +12,7 @@
     <color name="activity2">#0069c0</color>
     <color name="startColor">#3F51B5</color>
     <color name="endColor">#00093F</color>
+    <color name="white">#43FFFFFF</color>
     <!--
     <color name="appBar">#ECD936</color>
     <color name="colorPrimaryDark">#FFC107</color>
