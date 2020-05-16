@@ -14,9 +14,7 @@
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="vertical"
-        >
-
-    </androidx.recyclerview.widget.RecyclerView>
+        />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
