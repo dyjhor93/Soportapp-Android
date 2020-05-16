@@ -18,42 +18,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:paddingHorizontal="@dimen/dp1">
             <ImageView
                 android:layout_width="@dimen/imglittle"
                 android:layout_height="@dimen/imglittle"
                 android:src="@drawable/ic_photo_camera_black_24dp"/>
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                >
-                <TextView
-                    android:text="@string/app_name"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginVertical="5dp"
-                    android:textSize="25dp"
-                    android:textColor="@color/primaryTextColor"
-                    android:id="@+id/clientNic" />
-                <TextView
-                    android:text="@string/app_name"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="5dp"
-                    android:textSize="25dp"
-                    android:textColor="@color/primaryTextColor"
-                    android:id="@+id/clientOS" />
-            </LinearLayout>
+            <TextView
+                android:text="@string/nic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginVertical="5dp"
+                android:textSize="25dp"
+                android:textColor="@color/primaryTextColor"
+                android:id="@+id/clientNic"
+                android:paddingHorizontal="@dimen/dp1"/>
+            <TextView
+                android:text="@string/os"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:textSize="25dp"
+                android:textColor="@color/primaryTextColor"
+                android:id="@+id/clientOS"
+                android:paddingHorizontal="@dimen/dp1"/>
         </LinearLayout>
 
     </LinearLayout>

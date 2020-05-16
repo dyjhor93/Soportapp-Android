@@ -30,9 +30,9 @@ public class OSAdapter extends RecyclerView.Adapter<OSAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String nic = osModelList.get(position).getNic();
-        holder.nic.setText(nic);
+        holder.nic.setText("Nic: "+nic);
         String os = osModelList.get(position).getOs();
-        holder.os.setText(os);
+        holder.os.setText("OS: "+os);
 
     }
 
