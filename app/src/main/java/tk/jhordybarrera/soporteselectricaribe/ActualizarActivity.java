@@ -38,6 +38,7 @@ public class ActualizarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_actualizar);
         pb = findViewById(R.id.pb);
         b = findViewById(R.id.b);
+        pb.setVisibility(View.GONE);
         tv = findViewById(R.id.tv);
         PackageInfo packageInfo = null;
         try {
@@ -49,11 +50,11 @@ public class ActualizarActivity extends AppCompatActivity {
         }
 
     }
-    private class UpgradeTask extends AsyncTask<URL, Integer, String> {
+    private class UpgradeTask extends AsyncTask<String, Integer, String> {
 
         @Override
-        protected String doInBackground(URL... urls) {
-            String path = "/sdcard/YourApp.apk";
+        protected String doInBackground(String... urls) {
+            String path = "/sdcard/SoportApp.apk";
 
             try {
                 URL url = new URL("https://raw.githubusercontent.com/dyjhor93/SoportesElectricaribe/master/app/release/app-release.apk");
@@ -75,25 +76,28 @@ public class ActualizarActivity extends AppCompatActivity {
                     progress=(int) (total * 100 / fileLength);
                     publishProgress(progress);
                     output.write(data, 0, count);
-                    Log.i("info",String.valueOf(progress));
                 }
 
                 output.flush();
                 output.close();
                 input.close();
             } catch (Exception e) {
-                Log.e("YourApp", "Well that didn't work out so well...");
-                Log.e("YourApp", e.getMessage());
+                Log.e("Backgroung proccess", e.getMessage());
+                Log.i("info",String.valueOf(e.getMessage()));
             }
             return path;
         }
         @Override
         protected void onPostExecute(String path) {
-            Intent i = new Intent();
-            i.setAction(Intent.ACTION_VIEW);
-            i.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive" );
-            Log.d("Lofting", "About to install new .apk");
-            ActualizarActivity.this.startActivity(i);
+            try {
+                Intent i = new Intent();
+                i.setAction(Intent.ACTION_VIEW);
+                i.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive" );
+                startActivity(i);
+            }catch (Exception e){
+                Log.e("Post Execute",e.getMessage());
+                Log.i("info",String.valueOf(e.getMessage()));
+            }
         }
 
         protected void onProgressUpdate(Integer... progress) {
@@ -105,12 +109,18 @@ public class ActualizarActivity extends AppCompatActivity {
 
     private void setProgressPercent(Integer progress) {
         tv.setText("%"+progress);
+        pb.setProgress(progress);
     }
 
     public void click(View v){
         if(tiene_permiso()){
             actualizar();
         }else{
+            if (pb.getVisibility() == View.GONE) {
+                pb.setVisibility(View.VISIBLE);
+            } else {
+                pb.setVisibility(View.GONE);
+            }
             comprobar_permisos();
         }
 
@@ -147,6 +157,9 @@ public class ActualizarActivity extends AppCompatActivity {
     }
 
     public void actualizar(){
+        //String a = this.getFilesDir().getAbsolutePath();
+        //Toast.makeText(this,a,Toast.LENGTH_SHORT).show();
+
         new UpgradeTask().execute();
     }
 
