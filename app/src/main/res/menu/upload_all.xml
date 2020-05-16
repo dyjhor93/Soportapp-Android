@@ -6,4 +6,9 @@
             app:showAsAction="always"
             android:icon="@drawable/ic_cloud_upload"
             android:title="@string/upload" />
+        <item
+            android:id="@+id/menu_upgrade"
+            app:showAsAction="never"
+            android:icon="@drawable/ic_autorenew_black_24dp"
+            android:title="Upgrade App" />
 </menu>

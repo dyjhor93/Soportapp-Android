@@ -78,9 +78,17 @@ public class MainActivity extends AppCompatActivity implements Clickable{
             case R.id.menu_upload_all:
                 upload();
                 return true;
+            case R.id.menu_upgrade:
+                upgrade();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void upgrade() {
+        Intent intent = new Intent(this, ActualizarActivity.class);
+        startActivity(intent);
     }
 
     private void upload() {
