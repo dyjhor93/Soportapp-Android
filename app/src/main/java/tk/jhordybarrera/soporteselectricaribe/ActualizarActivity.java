@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -109,45 +108,47 @@ public class ActualizarActivity extends AppCompatActivity {
     }
 
     public void click(View v){
-        if (pb.getVisibility() == View.GONE) {
-            pb.setVisibility(View.VISIBLE);
-        } else {
-            pb.setVisibility(View.GONE);
+        if(tiene_permiso()){
+            actualizar();
+        }else{
+            comprobar_permisos();
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET},MY_PERMISSIONS_REQUEST_INTERNET);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},MY_PERMISSIONS_REQUEST_WRITE);
+    }
+
+    public boolean tiene_permiso(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
+            return true;
         }else{
-            actualizar();
+            return false;
         }
     }
+
+    private void comprobar_permisos() {
+        //permiso sd
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Explica porque quieres los permisos
+            } else {
+                // No necesita explicacion, pedir permiso
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+            }
+        }
+
+        //permiso internet
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET)) {
+                // Explica porque quieres los permisos
+            } else {
+                // No necesita explicacion, pedir permiso
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET},1);
+            }
+        }
+    }
+
     public void actualizar(){
         new UpgradeTask().execute();
     }
 
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_INTERNET: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    click(null);
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this,this.getString(R.string.not_granted),Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-            // other 'case' lines to check for other permissions this app might request.
-        }
-    }
 
 }
