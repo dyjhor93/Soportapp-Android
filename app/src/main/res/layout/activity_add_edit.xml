@@ -21,7 +21,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/t_tittle"
+        android:layout_marginVertical="@dimen/dpmin"
         android:autofillHints="@string/app_name"
         android:background="@drawable/bg_edittext"
         android:gravity="center"
@@ -38,7 +38,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/t_tittle"
+        android:layout_marginVertical="@dimen/dpmin"
         android:autofillHints="@string/app_name"
         android:background="@drawable/bg_edittext"
         android:gravity="center"
