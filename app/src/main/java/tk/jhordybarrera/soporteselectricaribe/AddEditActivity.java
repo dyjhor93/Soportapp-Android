@@ -1,14 +1,19 @@
 package tk.jhordybarrera.soporteselectricaribe;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +24,29 @@ public class AddEditActivity extends AppCompatActivity {
     private EditText os;
     private EditText nic;
     private ImageView imageView;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.save_delete_update, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_save:
+                save();
+                return true;
+            case R.id.menu_delete:
+                delete();
+                return true;
+            case R.id.menu_upload:
+                upload();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +91,29 @@ public class AddEditActivity extends AppCompatActivity {
         //esto se controlara antes de subir al servidor
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,this.getString(R.string.not_grandted),Toast.LENGTH_LONG).show();
+            Toast.makeText(this,this.getString(R.string.not_granted),Toast.LENGTH_LONG).show();
         }else{
             dispatchTakePictureIntent();
         }
+    }
+
+    public void save(){
+
+    }
+    public void delete(){
+        new AlertDialog.Builder(this)
+                .setTitle("Eliminar")
+                .setMessage("Estas seguro?")
+                .setPositiveButton("Confirmar", (dialog, which) -> {
+                    // continue with delete
+                })
+    .setNegativeButton("Cancelar", (dialog, which) -> {
+        // do nothing
+    })
+    .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+    public void upload(){
+
     }
 }

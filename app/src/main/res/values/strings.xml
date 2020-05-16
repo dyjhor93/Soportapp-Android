@@ -5,5 +5,8 @@
     <string name="log">Enter</string>
     <string name="nic">Nic</string>
     <string name="os">OS</string>
-    <string name="not_grandted">No has concedido permisos</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="upload">Upload</string>
+    <string name="not_granted">No has concedido permisos</string>
 </resources>
