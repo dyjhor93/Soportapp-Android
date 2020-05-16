@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tk.jhordybarrera.soporteselectricaribe"
     android:installLocation="auto"
-    android:versionCode="200517"
-    android:versionName="20.05.17">
+    >
     <!-- Permisos de la aplicación -->
     <uses-permission android:name="android.permission.INTERNET" android:required="true" />
     <uses-permission android:name="android.permission.CAMERA" android:required="true" />

@@ -3,16 +3,31 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
 
-    defaultConfig {
-        applicationId "tk.jhordybarrera.soporteselectricaribe"
-        minSdkVersion 16
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionProps.load(new FileInputStream(versionPropsFile))
+        def name = versionProps['VERSION_NAME']
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+        versionProps['VERSION_CODE']=code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        defaultConfig {
+            applicationId "tk.jhordybarrera.soporteselectricaribe"
+            minSdkVersion 16
+            targetSdkVersion 26
+            versionName name
+            versionCode code
+
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        }
     }
+    else {
+        throw new GradleException("Could not read version.properties!")
+    }
+
 
     buildTypes {
         release {
