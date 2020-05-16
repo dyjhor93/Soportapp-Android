@@ -49,6 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/ic_bombilla"
+        android:id="@+id/gallery"
         />
 </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
