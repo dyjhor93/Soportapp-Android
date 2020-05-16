@@ -2,16 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="tk.jhordybarrera.soporteselectricaribe"
     android:installLocation="auto"
-    android:versionCode="05161443"
-    android:versionName="mayo 16">
+    android:versionCode="200517"
+    android:versionName="20.05.17">
     <!-- Permisos de la aplicación -->
-    <uses-permission
-        android:name="android.permission.CAMERA"
-        android:required="true" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" android:required="true" />
+    <uses-permission android:name="android.permission.CAMERA" android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="true"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:required="true"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" android:required="true"/>
 
     <application
         android:allowBackup="false"
@@ -21,7 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ActualizarActivity"></activity>
-        <activity android:name=".AboutActivity" />
         <activity android:name=".AddEditActivity" />
         <activity
             android:name=".LoginActivity"
