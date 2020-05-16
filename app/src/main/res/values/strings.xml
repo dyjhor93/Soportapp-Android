@@ -5,4 +5,5 @@
     <string name="log">Enter</string>
     <string name="nic">Nic</string>
     <string name="os">OS</string>
+    <string name="not_grandted">No has concedido permisos</string>
 </resources>

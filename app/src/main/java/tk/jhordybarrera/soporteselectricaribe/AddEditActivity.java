@@ -63,7 +63,7 @@ public class AddEditActivity extends AppCompatActivity {
         //esto se controlara antes de subir al servidor
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,"No has consedido permisos de la camara",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,this.getString(R.string.not_grandted),Toast.LENGTH_LONG).show();
         }else{
             dispatchTakePictureIntent();
         }
