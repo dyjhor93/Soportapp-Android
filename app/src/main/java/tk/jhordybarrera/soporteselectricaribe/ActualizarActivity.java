@@ -3,6 +3,7 @@ package tk.jhordybarrera.soporteselectricaribe;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -89,15 +91,7 @@ public class ActualizarActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String path) {
-            try {
-                Intent i = new Intent();
-                i.setAction(Intent.ACTION_VIEW);
-                i.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive" );
-                startActivity(i);
-            }catch (Exception e){
-                Log.e("Post Execute",e.getMessage());
-                Log.i("info",String.valueOf(e.getMessage()));
-            }
+            lanzar_instalacion(path);
         }
 
         protected void onProgressUpdate(Integer... progress) {
@@ -105,6 +99,35 @@ public class ActualizarActivity extends AppCompatActivity {
         }
     }
 
+    public void lanzar_instalacion(String path){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try {
+                Uri contentUri = FileProvider.getUriForFile(
+                        this,
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        new File(path)
+                );
+                Intent install = new Intent(Intent.ACTION_VIEW);
+                install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                install.setData(contentUri) ;
+                this.startActivity(install);
+                //this.unregisterReceiver(this);
+            }catch (Exception e){
+                Log.e("Post Execute",e.getMessage());
+            }
+        }else{
+            try {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setDataAndType(Uri.fromFile(new File(path)), "application/vnd.android.package-archive" );
+                startActivity(i);
+            }catch (Exception e){
+                Log.e("Post Execute",e.getMessage());
+            }
+        }
+
+    }
 
 
     private void setProgressPercent(Integer progress) {
@@ -118,8 +141,6 @@ public class ActualizarActivity extends AppCompatActivity {
         }else{
             if (pb.getVisibility() == View.GONE) {
                 pb.setVisibility(View.VISIBLE);
-            } else {
-                pb.setVisibility(View.GONE);
             }
             comprobar_permisos();
         }
@@ -152,6 +173,17 @@ public class ActualizarActivity extends AppCompatActivity {
             } else {
                 // No necesita explicacion, pedir permiso
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET},1);
+            }
+        }
+
+        //permiso install apps
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.REQUEST_INSTALL_PACKAGES) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.REQUEST_INSTALL_PACKAGES)) {
+                // Explica porque quieres los permisos
+            } else {
+                // No necesita explicacion, pedir permiso
+                Toast.makeText(this,"Pidiendo permiso",Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES},3);
             }
         }
     }

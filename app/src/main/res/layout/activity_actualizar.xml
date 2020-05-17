@@ -24,7 +24,6 @@
         android:id="@+id/pb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:progress="0"
         android:layout_marginHorizontal="10dp"
