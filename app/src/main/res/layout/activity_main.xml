@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_add_circle_black_24dp"
+        android:onClick="add_evidence"
         android:layout_margin="10dp" />
     />
 

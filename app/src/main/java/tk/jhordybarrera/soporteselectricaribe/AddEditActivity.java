@@ -24,7 +24,7 @@ import android.widget.Toast;
 public class AddEditActivity extends AppCompatActivity {
     private EditText os;
     private EditText nic;
-    private ImageView imageView;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -54,7 +54,7 @@ public class AddEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit);
         os = findViewById(R.id.clientOS);
         nic = findViewById(R.id.clientNic);
-        imageView = findViewById(R.id.gallery);
+
         load_data();
     }
 
@@ -71,8 +71,8 @@ public class AddEditActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageView.setImageBitmap(imageBitmap);
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");
+
         }
     }
     private void load_data() {
@@ -114,18 +114,11 @@ public class AddEditActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_CONTACTS)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+                    Manifest.permission.CAMERA)) {
+
             } else {
                 // No explanation needed; request the permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.CAMERA},MY_PERMISSIONS_REQUEST_CAMERA);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},MY_PERMISSIONS_REQUEST_CAMERA);
             }
         }else{
             dispatchTakePictureIntent();

@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/img"
         android:src="@drawable/logo"
-
+        android:onClick="user_test"
         />
     <EditText
         android:layout_width="match_parent"

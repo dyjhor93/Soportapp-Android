@@ -10,7 +10,8 @@
     android:padding="@dimen/t_tittle"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,11 +46,14 @@
         android:hint="@string/os"
         android:inputType="number"
         android:id="@+id/clientOS"/>
-    <ImageView
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_bombilla"
-        android:id="@+id/gallery"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageGallery"
+        android:clickable="true"
+        android:focusable="true"
+        android:scrollbars="vertical"
         />
 </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton

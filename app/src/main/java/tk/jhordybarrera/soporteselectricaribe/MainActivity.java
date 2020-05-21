@@ -24,22 +24,19 @@ import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSModel;
 public class MainActivity extends AppCompatActivity implements Clickable{
     private RecyclerView recyclerViewOS;
     private RecyclerView.Adapter mAdapter;
-    private FloatingActionButton addNewJob;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addNewJob = findViewById(R.id.fab_main_add);
         recyclerViewOS = findViewById(R.id.recyclerViewOS);
         recyclerViewOS.setHasFixedSize(false);
         recyclerViewOS.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new OSAdapter(getData(),this);
         recyclerViewOS.setAdapter(mAdapter);
-        addNewJob.setOnClickListener(view -> add_evidence());
     }
 
-    public void add_evidence(){
+    public void add_evidence(View v){
         Intent intent = new Intent(this, AddEditActivity.class);
         startActivity(intent);
     }

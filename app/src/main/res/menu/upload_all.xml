@@ -8,7 +8,12 @@
             android:title="@string/upload" />
         <item
             android:id="@+id/menu_upgrade"
-            app:showAsAction="never"
+            app:showAsAction="always"
             android:icon="@drawable/ic_autorenew_black_24dp"
             android:title="Upgrade App" />
+        <item
+            android:id="@+id/menu_logout"
+            android:icon="@drawable/ic_exit"
+            app:showAsAction="always"
+            android:title="@string/upload" />
 </menu>
