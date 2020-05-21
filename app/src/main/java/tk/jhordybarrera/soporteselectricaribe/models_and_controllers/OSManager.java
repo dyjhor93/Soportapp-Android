@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,26 +54,21 @@ public class OSManager {
         }
     }
 
-    public void save_os(String os, String nic){
-        ContentValues values = new ContentValues();
-        values.put(OS.COLUMN_NAME_OS, os);
-        values.put(OS.COLUMN_NAME_NIC, nic);
-        db.insert(OS.TABLE_NAME, null, values);
-    }
-    public void update_os(String id,String os, String nic){
+    public void save_os(String id,String os, String nic){
         ContentValues values = new ContentValues();
         values.put(OS.COLUMN_NAME_OS, os);
         values.put(OS.COLUMN_NAME_NIC, nic);
         values.put(OS.COLUMN_NAME_USER_ID, id);
-        // Which row to update, based on the title
-        String selection = OS._ID + " LIKE ?";
-        String[] selectionArgs = { id };
-
-        int count = db.update(
-                OS.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs);
+        db.insert(OS.TABLE_NAME, null, values);
+    }
+    public void delete_nic(String nic){
+        String selection = OS.COLUMN_NAME_NIC + " LIKE ?";
+        String[] selectionArgs = { nic };
+        int deletedRows = db.delete(OS.TABLE_NAME, selection, selectionArgs);
+    }
+    public void update_os(String id,String os, String nic,String old_nic){
+        delete_nic(old_nic);
+        save_os(id,os,nic);
     }
     public ArrayList list_os() {
         String[] projection = {

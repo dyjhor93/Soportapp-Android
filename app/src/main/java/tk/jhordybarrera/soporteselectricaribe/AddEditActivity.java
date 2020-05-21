@@ -127,12 +127,17 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     public void save(){
-        if(getIntent().hasExtra("nic")){
-            new OSManager(this.getApplicationContext()).update_os(getIntent().getStringExtra("id"),os.getText().toString(),nic.getText().toString());
-        }else{
-            new OSManager(this.getApplicationContext()).save_os(os.getText().toString(),nic.getText().toString());
+        if(nic.getText().toString().isEmpty()){
+            Toast.makeText(this, "Nic no puede estar vacio",Toast.LENGTH_SHORT).show();
+        }else {
+            if (getIntent().hasExtra("nic")) {
+                new OSManager(this.getApplicationContext()).update_os(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString(),getIntent().getStringExtra("nic"));
+            } else {
+                new OSManager(this.getApplicationContext()).save_os(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString());
+            }
+            Toast.makeText(this.getApplicationContext(), "Se ha guardado correctamente",Toast.LENGTH_SHORT).show();
+            this.finish();
         }
-
     }
 
     public void delete(){
@@ -141,6 +146,8 @@ public class AddEditActivity extends AppCompatActivity {
                 .setMessage("Estas seguro?")
                 .setPositiveButton("Confirmar", (dialog, which) -> {
                     // continue with delete
+                    new OSManager(this.getApplicationContext()).delete_nic(nic.getText().toString());
+                    this.finish();
                 }).setNegativeButton("Cancelar", (dialog, which) -> {
                     // do nothing
                 }).setIcon(android.R.drawable.ic_dialog_alert).show();

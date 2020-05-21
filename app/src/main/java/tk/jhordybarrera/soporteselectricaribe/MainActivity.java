@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements Clickable{
         Intent intent = new Intent(this, AddEditActivity.class);
         intent.putExtra("nic",getData().get(position).getNic());
         intent.putExtra("os",getData().get(position).getOs());
-        startActivity(intent);
+        startActivityForResult(intent,REQUEST_SAVE);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
