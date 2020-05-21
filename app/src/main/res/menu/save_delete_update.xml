@@ -16,4 +16,9 @@
         app:showAsAction="always"
         android:icon="@drawable/ic_cloud_upload"
         android:title="@string/upload" />
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_exit"
+        app:showAsAction="always"
+        android:title="@string/upload" />
 </menu>

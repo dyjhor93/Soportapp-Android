@@ -138,10 +138,11 @@ public class ActualizarActivity extends AppCompatActivity {
     public void click(View v){
         if(tiene_permiso()){
             actualizar();
-        }else{
-            if (pb.getVisibility() == View.GONE) {
+            if (pb.getVisibility() != View.VISIBLE) {
                 pb.setVisibility(View.VISIBLE);
             }
+        }else{
+
             comprobar_permisos();
         }
 

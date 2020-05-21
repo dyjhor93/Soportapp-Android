@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements Clickable{
     public List<OSModel> getData() {
 
         List<OSModel> OSModel = new ArrayList<>();
+        //aqui se recuperan los datos y se mandan a la vista
         //datos de prueba reemplazar por carga local sqlite
         //OSModel.add(new OSModel("Nic1","OS1"));
         //OSModel.add(new OSModel("Nic2","OS2"));
@@ -81,9 +82,16 @@ public class MainActivity extends AppCompatActivity implements Clickable{
             case R.id.menu_upgrade:
                 upgrade();
                 return true;
+            case R.id.menu_logout:
+                logout();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void logout() {
+        //destruir el token y regresar al activity splash
     }
 
     private void upgrade() {
