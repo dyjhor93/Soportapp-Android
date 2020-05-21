@@ -2,13 +2,9 @@ package tk.jhordybarrera.soporteselectricaribe;
 //https://medium.com/@cvallejo/sistema-de-autenticaci%C3%B3n-api-rest-con-laravel-5-6-240be1f3fc7d
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -23,23 +20,21 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.AuthenticationLocal;
-import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.AuthenticationLocal.*;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String url="http://soportapp.tk/api/auth/login";
+    private static final String urlLogin ="http://soportapp.tk/api/auth/login";
+    private static final String urlUser ="http://soportapp.tk/api/auth/user";
     private EditText user;
     private EditText pass;
     private Button button;
     private ProgressBar pb;
     private RequestQueue queue;
-    private UserSaveDbHelper dbMan;
-    private SQLiteDatabase db;
+    private String userId;
+    AuthenticationLocal auth;
     private boolean autenticated;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,50 +44,17 @@ public class LoginActivity extends AppCompatActivity {
         user = findViewById(R.id.login_user);
         pass = findViewById(R.id.login_pass);
         pb = findViewById(R.id.login_pb);
-        dbMan = new AuthenticationLocal.UserSaveDbHelper(this.getApplicationContext());
+        auth = new AuthenticationLocal(this.getApplicationContext());
         autenticated=false;
-        db = dbMan.getWritableDatabase();
-        if(check_saved()){
+
+        if(auth.check_saved()){
+            autenticated=true;
             check_login();
         }
         queue = Volley.newRequestQueue(this);
     }
 
-    private boolean check_saved() {
-        String[] projection = {
-                BaseColumns._ID,
-                UserSave.COLUMN_NAME_TOKEN
-        };
 
-        Cursor cursor = db.query(
-                UserSave.TABLE_NAME,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                null,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null               // The sort order
-        );
-
-        List itemIds = new ArrayList<>();
-        while(cursor.moveToNext()) {
-            long itemId = cursor.getLong(
-                    cursor.getColumnIndexOrThrow(UserSave._ID));
-            itemIds.add(itemId);
-        }
-        cursor.close();
-        if(!itemIds.isEmpty()){
-            autenticated = true;
-            return true;
-        }
-        return false;
-    }
-    private void save_session(String token){
-        ContentValues values = new ContentValues();
-        values.put(UserSave.COLUMN_NAME_TOKEN, token);
-        long newRowId = db.insert(UserSave.TABLE_NAME, null, values);
-        Toast.makeText(this,"Guardada sesion con id "+newRowId, Toast.LENGTH_SHORT).show();
-    }
 
     public void login_click(View v){
         cargando();
@@ -120,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     public void check_login(){
         if(autenticated){
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("id",userId);
             startActivity(intent);
             this.finish();
         }else{
@@ -133,22 +96,22 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(String... strings) {
-            StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+            StringRequest postRequest = new StringRequest(Request.Method.POST, urlLogin,
                     response -> {
                         // response
                         //Log.e("Response", response);
                         try{
                             JSONObject obj = new JSONObject(response);
+                            String tk="",tk_tp="";
                             if(obj.has("access_token")){
-                                autenticated=true;
-
-                                save_session(obj.getString("access_token"));
+                                tk=obj.getString("access_token");
+                                tk_tp = obj.getString("token_type");
+                                get_user(tk,tk_tp);
                             }
                         }catch(Exception e){
                             autenticated = false;
                             Log.e("Error", "parsing json");
                         }
-                        check_login();
                     },
                     error -> {
                         // error
@@ -164,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                     params.put("password", strings[1]);
                     return params;
                 }
+
             };
 
             queue.add(postRequest);
@@ -172,5 +136,45 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public void get_user(String token,String token_type){
+
+        StringRequest postRequest = new StringRequest(Request.Method.GET, urlUser,
+                response -> {
+                    // response
+                    //Log.e("Response", response);
+                    try{
+                        JSONObject obj = new JSONObject(response);
+                        String id="";
+                        if(obj.has("id")){
+                            autenticated=true;//para verificar el login
+                            id=obj.getString("id");
+                            userId=id;
+                            auth.save_session(token,id);
+                            Toast.makeText(this,"Bienvenido "+obj.getString("name"),Toast.LENGTH_SHORT).show();
+                        }
+                    }catch(Exception e){
+                        autenticated = false;
+                        Log.e("Error", "getting id");
+                    }
+                    check_login();
+                },
+                error -> {
+                    // error
+                    Log.e("Error.Response", error.getMessage());
+                    check_login();
+                }
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                String authorization=token_type+" "+token;
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Authorization", authorization);
+                return params;
+            }
+        };
+
+        queue.add(postRequest);
+    }
 }
 

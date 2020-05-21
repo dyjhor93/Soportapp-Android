@@ -1,5 +1,7 @@
 package tk.jhordybarrera.soporteselectricaribe;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,14 +12,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.AuthenticationLocal;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSAdapter;
+import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSManager;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSModel;
 
 
@@ -32,28 +33,31 @@ public class MainActivity extends AppCompatActivity implements Clickable{
         recyclerViewOS = findViewById(R.id.recyclerViewOS);
         recyclerViewOS.setHasFixedSize(false);
         recyclerViewOS.setLayoutManager(new LinearLayoutManager(this));
+        load_content();
+    }
+
+    private void load_content() {
         mAdapter = new OSAdapter(getData(),this);
         recyclerViewOS.setAdapter(mAdapter);
     }
 
+    static final int REQUEST_SAVE = 1;
     public void add_evidence(View v){
         Intent intent = new Intent(this, AddEditActivity.class);
-        startActivity(intent);
+        if(getIntent().hasExtra("id")){
+            intent.putExtra("id",getIntent().getStringExtra("id"));
+        }
+        startActivityForResult(intent,REQUEST_SAVE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        load_content();
     }
 
     public List<OSModel> getData() {
-
-        List<OSModel> OSModel = new ArrayList<>();
-        //aqui se recuperan los datos y se mandan a la vista
-        //datos de prueba reemplazar por carga local sqlite
-        //OSModel.add(new OSModel("Nic1","OS1"));
-        //OSModel.add(new OSModel("Nic2","OS2"));
-        //OSModel.add(new OSModel("Nic3"));
-        //OSModel.add(new OSModel("Nic4"));
-        //OSModel.add(new OSModel("Nic5","OS3"));
-        //OSModel.add(new OSModel("Nic6"));
-
-        return OSModel;
+        return new OSManager(this.getApplicationContext()).list_os();
     }
 
     @Override
@@ -89,7 +93,20 @@ public class MainActivity extends AppCompatActivity implements Clickable{
 
     private void logout() {
         //destruir el token y regresar al activity splash
+        new AlertDialog.Builder(this)
+                .setTitle("Cerrar sesion")
+                .setMessage("Estas seguro?")
+                .setPositiveButton("Confirmar", (dialog, which) -> {
+                    //ok, continue with action
+                    new AuthenticationLocal(this.getApplicationContext()).delete_session();
+                    this.finish();
+                }).setNegativeButton("Cancelar", (dialog, which) -> {
+                    // do nothing
+                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+
+        //System.exit(0);//cerrar la app
     }
+
 
     private void upgrade() {
         Intent intent = new Intent(this, ActualizarActivity.class);
@@ -99,4 +116,5 @@ public class MainActivity extends AppCompatActivity implements Clickable{
     private void upload() {
 
     }
+
 }

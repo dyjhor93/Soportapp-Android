@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSManager;
+
 public class AddEditActivity extends AppCompatActivity {
     private EditText os;
     private EditText nic;
@@ -54,7 +56,6 @@ public class AddEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit);
         os = findViewById(R.id.clientOS);
         nic = findViewById(R.id.clientNic);
-
         load_data();
     }
 
@@ -72,8 +73,8 @@ public class AddEditActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             //Bitmap imageBitmap = (Bitmap) extras.get("data");
-
         }
+
     }
     private void load_data() {
         if(getIntent().hasExtra("nic")){
@@ -126,20 +127,23 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     public void save(){
+        if(getIntent().hasExtra("nic")){
+            new OSManager(this.getApplicationContext()).update_os(getIntent().getStringExtra("id"),os.getText().toString(),nic.getText().toString());
+        }else{
+            new OSManager(this.getApplicationContext()).save_os(os.getText().toString(),nic.getText().toString());
+        }
 
     }
+
     public void delete(){
         new AlertDialog.Builder(this)
                 .setTitle("Eliminar")
                 .setMessage("Estas seguro?")
                 .setPositiveButton("Confirmar", (dialog, which) -> {
                     // continue with delete
-                })
-    .setNegativeButton("Cancelar", (dialog, which) -> {
-        // do nothing
-    })
-    .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
+                }).setNegativeButton("Cancelar", (dialog, which) -> {
+                    // do nothing
+                }).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
     public void upload(){
 
