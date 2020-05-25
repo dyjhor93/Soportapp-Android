@@ -20,13 +20,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ActualizarActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_INTERNET=1;
@@ -34,6 +49,9 @@ public class ActualizarActivity extends AppCompatActivity {
     private ProgressBar pb;
     private Button b;
     private TextView tv;
+    private TextView wv;
+    private RequestQueue queue;
+    private int curVersionCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,15 +60,10 @@ public class ActualizarActivity extends AppCompatActivity {
         b = findViewById(R.id.b);
         pb.setVisibility(View.GONE);
         tv = findViewById(R.id.tv);
-        PackageInfo packageInfo = null;
-        try {
-            packageInfo = getPackageManager().getPackageInfo(this.getPackageName(), 0);
-            int curVersionCode = packageInfo.versionCode;
-            tv.setText("Version: "+curVersionCode);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        wv = findViewById(R.id.wv);
 
+        queue = Volley.newRequestQueue(this);
+        new GetApkData().execute();
     }
     private class UpgradeTask extends AsyncTask<String, Integer, String> {
 
@@ -195,6 +208,49 @@ public class ActualizarActivity extends AppCompatActivity {
 
         new UpgradeTask().execute();
     }
+    class GetApkData extends AsyncTask<Void, Void, String>{
+        @Override
+        protected String doInBackground(Void... params) {
+            String url="https://raw.githubusercontent.com/dyjhor93/SoportesElectricaribe/master/app/release/output.json";
+            StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                    response -> {
+                        // response
+                        //Log.e("Response", response);
+                        try{
+                            JSONArray jsonArray = new JSONArray(response);
+                            JSONObject obj = jsonArray.getJSONObject(0);
+                            if(obj.has("apkData")){
+                                JSONObject jsonResponse = obj.getJSONObject("apkData");
+                                String version = jsonResponse.getString("versionCode");
+                                setVersion(version);
+                            }
+                        }catch(Exception e){
+                            Log.e("Error", e.getMessage());
+                        }
+                    },
+                    error -> {
+                        // error
+                        Log.e("Error.Response", error.getMessage());
+                    }
+            );
 
+            queue.add(postRequest);
+            return null;
+        }
+
+    }
+
+    private void setVersion(String version) {
+
+        wv.setText(version);
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            curVersionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        tv.setText(curVersionCode+"");
+    }
 
 }
