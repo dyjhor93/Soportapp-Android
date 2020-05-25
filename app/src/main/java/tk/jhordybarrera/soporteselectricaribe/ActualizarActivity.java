@@ -26,29 +26,22 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ActualizarActivity extends AppCompatActivity {
     public static final int MY_PERMISSIONS_REQUEST_INTERNET=1;
     public static final int MY_PERMISSIONS_REQUEST_WRITE=2;
     private ProgressBar pb;
     private Button b;
-    private TextView tv;
+    private TextView rv;
     private TextView wv;
     private RequestQueue queue;
     private int curVersionCode;
@@ -59,7 +52,7 @@ public class ActualizarActivity extends AppCompatActivity {
         pb = findViewById(R.id.pb);
         b = findViewById(R.id.b);
         pb.setVisibility(View.GONE);
-        tv = findViewById(R.id.tv);
+        rv = findViewById(R.id.rv);
         wv = findViewById(R.id.wv);
 
         queue = Volley.newRequestQueue(this);
@@ -144,7 +137,7 @@ public class ActualizarActivity extends AppCompatActivity {
 
 
     private void setProgressPercent(Integer progress) {
-        tv.setText("%"+progress);
+        rv.setText("%"+progress);
         pb.setProgress(progress);
     }
 
@@ -250,7 +243,15 @@ public class ActualizarActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        tv.setText(curVersionCode+"");
+        rv.setText(curVersionCode+"");
+
+        try {
+            int r=Integer.parseInt(rv.getText().toString());
+            int l=Integer.parseInt(wv.getText().toString());
+            if(l>=r){
+                b.setEnabled(false);
+            }
+        }catch (Exception e){}
     }
 
 }
