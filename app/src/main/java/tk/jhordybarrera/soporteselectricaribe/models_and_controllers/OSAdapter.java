@@ -1,5 +1,6 @@
 package tk.jhordybarrera.soporteselectricaribe.models_and_controllers;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,12 @@ public class OSAdapter extends RecyclerView.Adapter<OSAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         String nic = osModelList.get(position).getNic();
         holder.nic.setText("Nic: "+nic);
-        String os = osModelList.get(position).getOs();
-        holder.os.setText("OS: "+os);
 
+        String os = osModelList.get(position).getOs();
+        if(os.equals("no os")){
+            holder.os.setTextColor(Color.RED);
+        }
+        holder.os.setText("OS: "+os);
     }
 
     @Override

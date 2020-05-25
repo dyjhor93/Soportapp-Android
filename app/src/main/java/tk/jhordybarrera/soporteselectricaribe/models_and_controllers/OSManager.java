@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class OSManager {
     private OSManager.OSDbHelper dbMan;
@@ -64,12 +62,14 @@ public class OSManager {
     public void delete_nic(String nic){
         String selection = OS.COLUMN_NAME_NIC + " LIKE ?";
         String[] selectionArgs = { nic };
-        int deletedRows = db.delete(OS.TABLE_NAME, selection, selectionArgs);
+        db.delete(OS.TABLE_NAME, selection, selectionArgs);
     }
+
     public void update_os(String id,String os, String nic,String old_nic){
         delete_nic(old_nic);
         save_os(id,os,nic);
     }
+
     public ArrayList list_os() {
         String[] projection = {
                 BaseColumns._ID,
@@ -102,4 +102,5 @@ public class OSManager {
 
         return list;
     }
+
 }

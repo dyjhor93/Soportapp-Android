@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -24,11 +23,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.GalleryAdapter;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSManager;
@@ -39,25 +40,33 @@ public class AddEditActivity extends AppCompatActivity {
     private String photoDir;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private RecyclerView imageGallery;
+    private OSManager osman;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit);
         os = findViewById(R.id.clientOS);
         nic = findViewById(R.id.clientNic);
-        photoDir = this.getFilesDir().toString()+File.separator+"evidencia"+File.separator;
+        osman = new OSManager(this.getApplicationContext());
+        photoDir = this.getFilesDir().getAbsolutePath() +File.separator+"evidencia";
+        File dir = new File(photoDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        photoDir+=File.separator;
         imageGallery = findViewById(R.id.imageGallery);
+        if(getIntent().hasExtra("nic")){
+            nic.setText(getIntent().getStringExtra("nic"));
+        }
+        if(getIntent().hasExtra("os")){
+            if(!getIntent().getStringExtra("os").equals("no os"))//si no se ingreso sin orden de servicio
+                os.setText(getIntent().getStringExtra("os"));
+        }
         load_data();
     }
 
 
     private void load_data() {
-        if(getIntent().hasExtra("nic")){
-            nic.setText(getIntent().getStringExtra("nic"));
-        }
-        if(getIntent().hasExtra("os")){
-            os.setText(getIntent().getStringExtra("os"));
-        }
         if(folder()){
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getApplicationContext(),2);
             imageGallery.setLayoutManager(layoutManager);
@@ -107,7 +116,6 @@ public class AddEditActivity extends AppCompatActivity {
             try {
                 photoFile = createImageFile();//revisar el creador del archivo de la imagen
             } catch (IOException ex) {}
-
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "tk.jhordybarrera.soporteselectricaribe.AddEditActivity",
@@ -174,32 +182,56 @@ public class AddEditActivity extends AppCompatActivity {
         //primer caso, un item nuevo y completo tiene nic y os
         //segundo caso, un item nuevo e incompleto tiene solo nic
         //tercer caso el item ya existe, hay que verificar los cambios y mover directorios
+        if(nic.isEnabled())
         if (!getIntent().hasExtra("nic")) {//verificamos que no sea un existente
             if(nic.getText().toString().isEmpty()){//verificamos que el nic no esté en blanco
                 Toast.makeText(this, "Nic no puede estar vacio",Toast.LENGTH_SHORT).show();
             }else{
-                if(!os.getText().toString().isEmpty()){//verificamos que la orden de servicio no esté en blanco
-                    //primer caso
+                //si se introdujo la orden de servicio
+                if(!os.getText().toString().isEmpty()){
                     if(folder()) {//verificamos el directorio antes de guardar
-                        new OSManager(this.getApplicationContext()).save_os(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString());
+                        osman.save_os(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString());
                         deactivate();//si se guardo desactivamos para evitar cambios
                     }else{
                         Toast.makeText(this, "No se puede usar el directorio",Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    //segundo caso
-                    Toast.makeText(this, "Accion aun no implementada (Sin OS)",Toast.LENGTH_SHORT).show();
+                }else{//si no se introdujo la orden de servicio
+                    if(folder()) {//verificamos el directorio antes de guardar
+                        osman.save_os(getIntent().getStringExtra("id"), "no os", nic.getText().toString());
+                        deactivate();//si se guardo desactivamos para evitar cambios
+                    }else{
+                        Toast.makeText(this, "No se puede usar el directorio",Toast.LENGTH_SHORT).show();
+                    }
                 }
-
-                //this.finish();//cerramos despues de guardar
             }
         }else {//es un existente aplique validacion de cambios actualizacion de datos
-            //tercer caso
-            Toast.makeText(this, "Accion aun no implementada (Actualizar)",Toast.LENGTH_SHORT).show();
+            //Si cambio la orden de servicio
+            String nicNuevo=nic.getText().toString();
+            String osNuevo=os.getText().toString();
+            String nicViejo=getIntent().getStringExtra("nic");
+            String osViejo=getIntent().getStringExtra("os");
 
+            if(!getIntent().getStringExtra("os").equals(os.getText().toString())){
+
+                move_folder(
+                        getExternalFilesDir(photoDir+nicViejo+File.separator+osViejo),
+                        getExternalFilesDir(photoDir+nicViejo+File.separator+osNuevo)
+                );
+            }
+            //si cambio el nic
+            if(!getIntent().getStringExtra("nic").equals(nic.getText().toString())){
+                move_folder(
+                        getExternalFilesDir(photoDir+nicViejo),
+                        getExternalFilesDir(photoDir+nicNuevo)
+                );
+            }
+
+            Toast.makeText(this, "Se actualizo la orden de servicio",Toast.LENGTH_SHORT).show();
             //validar cambios de directorio antes de actualizar la base de datos
-            //new OSManager(this.getApplicationContext()).update_os(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString(),getIntent().getStringExtra("nic"));
+            osman.update_os(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString(),getIntent().getStringExtra("nic"));
+            deactivate();
         }
+        load_data();
     }
 
     public void delete(){
@@ -208,12 +240,18 @@ public class AddEditActivity extends AppCompatActivity {
                 .setMessage("Estas seguro?")
                 .setPositiveButton("Confirmar", (dialog, which) -> {
                     // continue with delete
-                    new OSManager(this.getApplicationContext()).delete_nic(nic.getText().toString());
+                    osman.delete_nic(nic.getText().toString());
+
+                    if(!delete_dir(nic.getText().toString())){
+                        Toast.makeText(this,"No se pudieron eliminar las evidencias",Toast.LENGTH_SHORT).show();
+                    }
                     this.finish();
                 }).setNegativeButton("Cancelar", (dialog, which) -> {
                     // do nothing
                 }).setIcon(android.R.drawable.ic_dialog_alert).show();
     }
+
+
 
     public void upload(){
 
@@ -246,7 +284,70 @@ public class AddEditActivity extends AppCompatActivity {
         }
         return true;//si llega hasta aqui vamos bien, el direcctorio existe listo para guardar
     }
+    public boolean move_folder(File sourceDir, File destDir){
+        if (sourceDir.isFile() || destDir.isFile()) {
+            System.out.println("origen y destino no pueden ser archivos");
+            return false;
+        }
 
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
+        if (!sourceDir.exists()) {
+            System.out.println("El directorio origen no existe");
+            return false;
+        }
+
+        File[] items = sourceDir.listFiles();
+        if (items != null && items.length > 0) {
+            for (File item : items) {
+                if (item.isDirectory()) {
+                    // create the directory in the destination
+                    File newDir = new File(destDir, item.getName());
+                    newDir.mkdir();
+                    // copy the directory (recursive call)
+                    move_folder(item, newDir);
+                } else {
+                    // copy the file
+                    File destFile = new File(destDir, item.getName());
+                    move_file(item, destFile);
+                }
+            }
+        }
+        sourceDir.delete();
+        return true;
+    }
+    private boolean delete_dir(String nicDel) {
+        return new File(photoDir+nicDel).delete();
+    }
+    public void move_file(File sourceFile,File destFile) {
+        try {
+            if (!destFile.exists()) {
+                destFile.createNewFile();
+            }
+        }catch (Exception e){}
+
+        FileChannel sourceChannel = null;
+        FileChannel destChannel = null;
+
+        try {
+            sourceChannel = new FileInputStream(sourceFile).getChannel();
+            destChannel = new FileOutputStream(destFile).getChannel();
+            sourceChannel.transferTo(0, sourceChannel.size(), destChannel);
+        } catch (Exception e){
+            try {
+                if (sourceChannel != null) {
+                    sourceChannel.close();
+                }
+                if (destChannel != null) {
+                    destChannel.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        sourceFile.delete();
+    }
 
     /**
      * opciones de menú
