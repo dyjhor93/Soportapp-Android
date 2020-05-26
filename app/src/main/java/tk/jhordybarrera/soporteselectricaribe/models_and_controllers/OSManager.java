@@ -99,8 +99,13 @@ public class OSManager {
             );
         }
         cursor.close();
-
         return list;
     }
-
+    public boolean exist(String os){
+        String select = "SELECT * FROM order_service WHERE os='"+os+"'";
+        Cursor cursor = db.rawQuery(select, null);
+        if(cursor.getCount()>0)
+            return true;
+        return false;
+    }
 }
