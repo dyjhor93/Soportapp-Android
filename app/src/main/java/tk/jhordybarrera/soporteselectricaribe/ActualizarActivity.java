@@ -14,6 +14,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -58,6 +61,24 @@ public class ActualizarActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         new GetApkData().execute();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.refresh, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                new GetApkData().execute();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private class UpgradeTask extends AsyncTask<String, Integer, String> {
 
         @Override
@@ -248,9 +269,6 @@ public class ActualizarActivity extends AppCompatActivity {
         try {
             int r=Integer.parseInt(rv.getText().toString());
             int l=Integer.parseInt(wv.getText().toString());
-            if(l>=r){
-                b.setEnabled(false);
-            }
         }catch (Exception e){}
     }
 
