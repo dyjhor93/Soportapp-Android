@@ -39,6 +39,7 @@ public class AddEditActivity extends AppCompatActivity {
     private EditText nic;
     private String photoDir;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final String urlImage = "http://soportapp.tk/api/os/upload";
     private RecyclerView imageGallery;
     private OSManager osman;
     @Override

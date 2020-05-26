@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+        <!--
         <item
             android:id="@+id/menu_upload_all"
             app:showAsAction="always"
             android:icon="@drawable/ic_cloud_upload"
-            android:title="@string/upload" />
+            android:title="@string/upload" />-->
         <item
             android:id="@+id/menu_upgrade"
             app:showAsAction="always"

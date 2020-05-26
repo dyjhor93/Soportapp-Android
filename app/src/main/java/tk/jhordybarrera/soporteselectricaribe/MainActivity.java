@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements Clickable{
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.menu_upload_all:
+            /*case R.id.menu_upload_all:
                 upload();
-                return true;
+                return true;*/
             case R.id.menu_upgrade:
                 upgrade();
                 return true;
