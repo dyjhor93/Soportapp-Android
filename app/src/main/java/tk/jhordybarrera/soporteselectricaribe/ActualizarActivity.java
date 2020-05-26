@@ -267,8 +267,13 @@ public class ActualizarActivity extends AppCompatActivity {
         rv.setText(curVersionCode+"");
 
         try {
-            int r=Integer.parseInt(rv.getText().toString());
-            int l=Integer.parseInt(wv.getText().toString());
+            int local=Integer.parseInt(rv.getText().toString());
+            int remota=Integer.parseInt(wv.getText().toString());
+            if(remota>local){
+                b.setEnabled(true);
+            }else{
+                b.setEnabled(false);
+            }
         }catch (Exception e){}
     }
 
