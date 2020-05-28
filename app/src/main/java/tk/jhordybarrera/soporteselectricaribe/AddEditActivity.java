@@ -126,7 +126,7 @@ public class AddEditActivity extends AppCompatActivity{
             } catch (IOException ex) {}
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
-                        "tk.jhordybarrera.soporteselectricaribe.AddEditActivity",
+                        "tk.jhordybarrera.soporteselectricaribe.models_and_controllers.FileProviderClass",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
