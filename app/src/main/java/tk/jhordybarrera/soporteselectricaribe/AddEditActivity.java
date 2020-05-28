@@ -31,10 +31,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.FileProviderClass;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.GalleryAdapter;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSManager;
 
-public class AddEditActivity extends AppCompatActivity {
+public class AddEditActivity extends AppCompatActivity{
     private EditText os;
     private EditText nic;
     private String photoDir;
@@ -109,7 +110,11 @@ public class AddEditActivity extends AppCompatActivity {
             save();
             deactivate();
         }
-        dispatchTakePictureIntent();
+        if(nic.getText().toString().isEmpty()||os.getText().toString().isEmpty()){//verificamos que el nic no esté en blanco
+            Toast.makeText(this, "No puede estar vacio",Toast.LENGTH_SHORT).show();
+        }else {
+            dispatchTakePictureIntent();
+        }
     }
 
     private void dispatchTakePictureIntent() {
@@ -289,6 +294,7 @@ public class AddEditActivity extends AppCompatActivity {
         String trabajo=os.getText().toString();
         String ruta= photoDir +cliente;
         File folder = new File(ruta);
+
         //directory.mkdirs();
         if (!folder.exists()) {//si no existe el directorio se crea
             if(!folder.mkdirs()){
