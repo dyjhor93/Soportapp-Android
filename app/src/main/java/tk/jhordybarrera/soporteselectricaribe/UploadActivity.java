@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
@@ -114,14 +115,17 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
-                        Log.e("Response", "Response");
                         progress.setIndeterminate(false);
+                        progress.setBackgroundColor(Color.GREEN);
                         new guardar().execute();
 
                         try {
                             Log.e("Response.data", new String(response.data));
-                            //JSONObject obj = new JSONObject(new String(response.data));
-                            //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            JSONObject obj = new JSONObject(new String(response.data));
+                            if(obj.has("message")){
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -130,8 +134,9 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("Error", error.getMessage());
+                        Toast.makeText(getApplicationContext(),"Problema de conexion", Toast.LENGTH_SHORT).show();
+                        progress.setBackgroundColor(Color.RED);
+                        Log.e("Error", "Problema de conexion");
                         progress.setIndeterminate(false);
                     }
                 }) {
