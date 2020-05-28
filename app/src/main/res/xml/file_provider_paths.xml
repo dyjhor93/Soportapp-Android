@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <external-path name="evidencias" path="Android/data/tk.jhordybarrera.soporteselectricaribe/files/evidencias" />
+
     <external-path
         name="external"
         path="." />
@@ -10,4 +10,5 @@
     <files-path
         name="files"
         path="." />
+    <external-path name="evidencias" path="Android/data/tk.jhordybarrera.soporteselectricaribe/files/evidencias" />
 </paths>

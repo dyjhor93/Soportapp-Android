@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -134,11 +135,12 @@ public class ActualizarActivity extends AppCompatActivity {
             try {
                 Uri contentUri = FileProvider.getUriForFile(
                         this,
-                        BuildConfig.APPLICATION_ID + ".provider",
+                        "tk.jhordybarrera.soporteselectricaribe.models_and_controllers.FileProviderClass",
                         new File(path)
                 );
                 Intent install = new Intent(Intent.ACTION_VIEW);
-                install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                install.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
                 install.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 install.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
                 install.setData(contentUri) ;
