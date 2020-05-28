@@ -44,10 +44,11 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
     private RecyclerView.Adapter uploadAdapter;
     private RequestQueue queue;
     static final String urlUploadImage = "http://soportapp.tk/api/os/upload";
-    private static final String urlLogin ="http://soportapp.tk/api/auth/login";
+    private static final String urlOS = "http://soportapp.tk/api/os/store";
     ArrayList<String> lista;
     Bitmap bitmap;
     ArrayList<UploadModel> um;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +69,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
             String ruta = lista.get(i);
             um.add(new UploadModel(getIntent().getStringExtra("nic"), getIntent().getStringExtra("os"), 1/*reemplazar por idusuario*/, ruta));
         }
-        uploadAdapter = new UploadAdapter(um,this);
+        uploadAdapter = new UploadAdapter(um, this);
         recyclerViewUpload.setAdapter(uploadAdapter);
     }
 
@@ -84,7 +85,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         String filePath = i.getPath();
         Bitmap bitmap = BitmapFactory.decodeFile(filePath);
         //imageView.setImageBitmap(bitmap);
-        uploadBitmap(item,bitmap);
+        uploadBitmap(item, bitmap);
 
 /*
         new subir().execute(
@@ -95,7 +96,8 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         );
         */
     }
-    private void uploadBitmap(int i,final Bitmap bitmap) {
+
+    private void uploadBitmap(int i, final Bitmap bitmap) {
 
         //
         TextView nic = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.nic);
@@ -112,12 +114,12 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
-                        Log.e("Response","Response");
+                        Log.e("Response", "Response");
                         progress.setIndeterminate(false);
-
+                        new guardar().execute();
 
                         try {
-                            Log.e("Response.data",new String(response.data));
+                            Log.e("Response.data", new String(response.data));
                             //JSONObject obj = new JSONObject(new String(response.data));
                             //Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
@@ -129,7 +131,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("Error",error.getMessage());
+                        Log.e("Error", error.getMessage());
                         progress.setIndeterminate(false);
                     }
                 }) {
@@ -144,7 +146,6 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 //params.put("tags", tags);
-
 
 
                 params.put("nic", um.get(i).getNic());
@@ -169,10 +170,55 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         //adding the request to volley
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
     }
+
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
+
+    private class guardar extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            StringRequest postRequest = new StringRequest(Request.Method.POST, urlOS,
+                    response -> {
+                        // response
+                        //Log.e("Response", response);
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            if (obj.has("message")) {
+                                mostrar_respuesta(obj.getString("message"));
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    },
+                    error -> {
+                        // error
+                        mostrar_respuesta(error.getMessage());
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("client_nic", getIntent().getStringExtra("nic"));
+                    params.put("os", getIntent().getStringExtra("nic"));
+                    params.put("user_id", "1");
+                    return params;
+                }
+
+            };
+
+            queue.add(postRequest);
+
+            return null;
+        }
+
+        private void mostrar_respuesta(String message) {
+            Toast.makeText(UploadActivity.this, message, Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

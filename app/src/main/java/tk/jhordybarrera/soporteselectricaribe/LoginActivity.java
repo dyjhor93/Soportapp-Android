@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
                             id=obj.getString("id");
                             userId=id;
                             auth.save_session(token,id);
-                            Toast.makeText(this,"Bienvenido "+obj.getString("name"),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this,"Bienvenido "+obj.getString("name") + " id "+id,Toast.LENGTH_SHORT).show();
                         }
                     }catch(Exception e){
                         autenticated = false;

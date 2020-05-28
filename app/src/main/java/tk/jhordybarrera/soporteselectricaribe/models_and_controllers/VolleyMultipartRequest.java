@@ -100,7 +100,7 @@ import java.util.Map;
 
         @Override
         public void deliverError(VolleyError error) {
-            mErrorListener.onErrorResponse(error);
+            //mErrorListener.onErrorResponse(error);
         }
 
         /**

@@ -62,8 +62,10 @@ public class AddEditActivity extends AppCompatActivity{
         if(getIntent().hasExtra("os")){
             if(!getIntent().getStringExtra("os").equals("no os"))//si no se ingreso sin orden de servicio
                 os.setText(getIntent().getStringExtra("os"));
+
+            load_data();
         }
-        load_data();
+
         //Toast.makeText(this,photoDir,Toast.LENGTH_LONG).show();
         //Log.e("Dir",photoDir);
     }
@@ -265,7 +267,9 @@ public class AddEditActivity extends AppCompatActivity{
                 .setPositiveButton("Confirmar", (dialog, which) -> {
                     // continue with delete
                     osman.delete_nic(nic.getText().toString());
-                    if(!delete_dir(nic.getText().toString())){
+                    if(delete_dir(new File(photoDir+nic.getText().toString()).getAbsolutePath())){
+                        Toast.makeText(this,"Se eliminaron las evidencias",Toast.LENGTH_SHORT).show();
+                    }else{
                         Toast.makeText(this,"No se pudieron eliminar las evidencias",Toast.LENGTH_SHORT).show();
                     }
                     this.finish();
@@ -347,8 +351,20 @@ public class AddEditActivity extends AppCompatActivity{
         return true;
     }
 
-    private boolean delete_dir(String nicDel) {
-return false;
+    private boolean delete_dir(String path) {
+        File myDir = new File(path);
+        if (myDir.isDirectory()) {
+            String[] children = myDir.list();
+            for (int i = 0; i < children.length; i++) {
+                File item = new File(myDir, children[i]);
+                if (item.isDirectory()) {
+                    delete_dir(item.getAbsolutePath());
+                }else{
+                    item.delete();
+                }
+            }
+        }
+        return myDir.delete();
     }
 
     public void move_file(File sourceFile,File destFile) {
