@@ -78,6 +78,8 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
     @Override
     public void onItemClick(int position) {
         subir(position);
+
+
     }
 
     public void subir(int item) {
@@ -106,7 +108,10 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         TextView image = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.image);
         ProgressBar progress = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.carga);
         ImageView imageView = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.previa);
+        //progress.getProgressDrawable().setColorFilter(Color.GRAY, android.graphics.PorterDuff.Mode.SRC_IN);
+        new guardar().execute();
         progress.setIndeterminate(true);
+
 
         //getting the tag from the edittext
 
@@ -116,7 +121,8 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         progress.setIndeterminate(false);
-                        progress.setBackgroundColor(Color.GREEN);
+                        progress.getProgressDrawable().setColorFilter(
+                                Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
                         new guardar().execute();
 
                         try {
@@ -135,7 +141,8 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(),"Problema de conexion", Toast.LENGTH_SHORT).show();
-                        progress.setBackgroundColor(Color.RED);
+                        progress.getProgressDrawable().setColorFilter(
+                                Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
                         Log.e("Error", "Problema de conexion");
                         progress.setIndeterminate(false);
                     }
@@ -209,7 +216,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("client_nic", getIntent().getStringExtra("nic"));
-                    params.put("os", getIntent().getStringExtra("nic"));
+                    params.put("os", getIntent().getStringExtra("os"));
                     params.put("user_id", "1");
                     return params;
                 }
