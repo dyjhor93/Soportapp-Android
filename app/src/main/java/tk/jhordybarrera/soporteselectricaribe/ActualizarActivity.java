@@ -72,6 +72,8 @@ public class ActualizarActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.refresh:
+                rv.setText("");
+                wv.setText("");
                 new GetApkData().execute();
                 return true;
             default:
@@ -269,7 +271,7 @@ public class ActualizarActivity extends AppCompatActivity {
         try {
             int local=Integer.parseInt(rv.getText().toString());
             int remota=Integer.parseInt(wv.getText().toString());
-            if(remota>local){
+            if(remota>=local){
                 b.setEnabled(true);
             }else{
                 b.setEnabled(false);

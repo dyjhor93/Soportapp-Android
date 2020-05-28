@@ -39,7 +39,6 @@ public class AddEditActivity extends AppCompatActivity {
     private EditText nic;
     private String photoDir;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final String urlImage = "http://soportapp.tk/api/os/upload";
     private RecyclerView imageGallery;
     private OSManager osman;
     @Override
@@ -65,7 +64,7 @@ public class AddEditActivity extends AppCompatActivity {
         }
         load_data();
         //Toast.makeText(this,photoDir,Toast.LENGTH_LONG).show();
-        Log.e("Dir",photoDir);
+        //Log.e("Dir",photoDir);
     }
 
 
@@ -108,9 +107,9 @@ public class AddEditActivity extends AppCompatActivity {
     public void capturar(){
         if(nic.isEnabled()){//si todavia no se ha guardado guardamos
             save();
-        }else{//
-            dispatchTakePictureIntent();
+            deactivate();
         }
+        dispatchTakePictureIntent();
     }
 
     private void dispatchTakePictureIntent() {
@@ -184,10 +183,10 @@ public class AddEditActivity extends AppCompatActivity {
         //primer caso, un item nuevo y completo tiene nic y os
         //segundo caso, un item nuevo e incompleto tiene solo nic
         //tercer caso el item ya existe, hay que verificar los cambios y mover directorios
-        if(nic.isEnabled())
+        //if(nic.isEnabled())
         if (!getIntent().hasExtra("nic")) {//verificamos que no sea un existente
-            if(nic.getText().toString().isEmpty()){//verificamos que el nic no esté en blanco
-                Toast.makeText(this, "Nic no puede estar vacio",Toast.LENGTH_SHORT).show();
+            if(nic.getText().toString().isEmpty()||os.getText().toString().isEmpty()){//verificamos que el nic no esté en blanco
+                Toast.makeText(this, "No puede estar vacio",Toast.LENGTH_SHORT).show();
             }else{
                 if(osman.exist(os.getText().toString())){
                     Toast.makeText(this, "La orden de servicio ya existe en la base de datos",Toast.LENGTH_SHORT).show();
@@ -273,7 +272,11 @@ public class AddEditActivity extends AppCompatActivity {
 
 
     public void upload(){
-
+        Intent intent = new Intent(this, UploadActivity.class);
+        intent.putExtra("nic",nic.getText().toString());
+        intent.putExtra("os",os.getText().toString());
+        intent.putExtra("lista",listar());
+        startActivity(intent);
     }
 
     /**

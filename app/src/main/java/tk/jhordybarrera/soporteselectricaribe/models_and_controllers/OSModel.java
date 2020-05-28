@@ -16,10 +16,6 @@ public class OSModel {
         this.os = os;
         this.user_id=u_id;
     }
-    public OSModel(String nic) {
-        this.nic = nic;
-        this.os = "AddOS";
-    }
 
 
     public String getNic() {

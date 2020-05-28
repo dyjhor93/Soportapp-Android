@@ -32,7 +32,6 @@ public class OSAdapter extends RecyclerView.Adapter<OSAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         String nic = osModelList.get(position).getNic();
         holder.nic.setText("Nic: "+nic);
-
         String os = osModelList.get(position).getOs();
         if(os.equals("no os")){
             holder.os.setTextColor(Color.RED);
