@@ -62,7 +62,7 @@ public class ActualizarActivity extends AppCompatActivity {
         queue = Volley.newRequestQueue(this);
         new GetApkData().execute();
     }
-    /*
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -82,7 +82,7 @@ public class ActualizarActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-*/
+
     private class UpgradeTask extends AsyncTask<String, Integer, String> {
 
         @Override
