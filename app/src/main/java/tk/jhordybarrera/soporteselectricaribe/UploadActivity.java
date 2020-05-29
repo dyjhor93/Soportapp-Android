@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,17 +26,32 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.Part;
+import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.NetworkClient;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.UploadAdapter;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.UploadModel;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.VolleyMultipartRequest;
@@ -189,15 +205,18 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         return byteArrayOutputStream.toByteArray();
     }
 
+    private void mostrar_respuesta(String message) {
+        Toast.makeText(UploadActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
 
     private class guardar extends AsyncTask<Void, Void, Void> {
-
+    private String respuesta;
         @Override
         protected Void doInBackground(Void... voids) {
             StringRequest postRequest = new StringRequest(Request.Method.POST, urlOS,
                     response -> {
                         // response
-                        //Log.e("Response", response);
+                        Log.e("Response", response);
                         try {
                             JSONObject obj = new JSONObject(response);
                             if (obj.has("message")) {
@@ -209,7 +228,8 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                     },
                     error -> {
                         // error
-                        mostrar_respuesta(error.getMessage());
+                        mostrar_respuesta("Conexion fallida");
+                        Log.e("Response", "Conexion fallida");
                     }
             ) {
                 @Override
@@ -228,9 +248,89 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
             return null;
         }
 
-        private void mostrar_respuesta(String message) {
-            Toast.makeText(UploadActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+/*
+    public interface UploadAPIs {
+        @Multipart
+        @POST("/upload")
+        Call<ResponseBody> uploadImage(@Part MultipartBody.Part file, @Part("name") RequestBody requestBody);
+    }
+    private void uploadToServer(String filePath) {
+        Retrofit retrofit = NetworkClient.getRetrofitClient(this);
+        UploadAPIs uploadAPIs = retrofit.create(UploadAPIs.class);
+        //Create a file object using file path
+        File file = new File(filePath);
+        // Create a request body with file and image media type
+        RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
+        // Create MultipartBody.Part using file request-body,file name and part name
+        MultipartBody.Part part = MultipartBody.Part.createFormData("upload", file.getName(), fileReqBody);
+        //Create request body with text description and text media type
+        RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
+        //
+        Call call = uploadAPIs.uploadImage(part, description);
+        call.enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, retrofit2.Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
+    }
+
+ */
+/*//apache http
+    private DefaultHttpClient mHttpClient;
+
+
+    public ServerCommunication() {
+        HttpParams params = new BasicHttpParams();
+        params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        mHttpClient = new DefaultHttpClient(params);
+    }
+
+
+    public void uploadUserPhoto(File image) {
+
+        try {
+
+            HttpPost httppost = new HttpPost("some url");
+
+            MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            multipartEntity.addPart("Title", new StringBody("Title"));
+            multipartEntity.addPart("Nick", new StringBody("Nick"));
+            multipartEntity.addPart("Email", new StringBody("Email"));
+            multipartEntity.addPart("Description", new StringBody(Settings.SHARE.TEXT));
+            multipartEntity.addPart("Image", new FileBody(image));
+            httppost.setEntity(multipartEntity);
+
+            mHttpClient.execute(httppost, new PhotoUploadResponseHandler());
+
+        } catch (Exception e) {
+            Log.e(ServerCommunication.class.getName(), e.getLocalizedMessage(), e);
+        }
+    }
+
+    private class PhotoUploadResponseHandler implements ResponseHandler<Object> {
+
+        @Override
+        public Object handleResponse(HttpResponse response)
+                throws ClientProtocolException, IOException {
+
+            HttpEntity r_entity = response.getEntity();
+            String responseString = EntityUtils.toString(r_entity);
+            Log.d("UPLOAD", responseString);
+
+            return null;
         }
 
     }
+*/
+
+
+
 }
