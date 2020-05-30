@@ -42,9 +42,9 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
         holder.os.setText("os: "+os);
 
         File imgFile = new  File(ruta);
-        long size = imgFile.length()/1000000;
+        long size = imgFile.length()/1000;
 
-        holder.imageSize.setText("Size: "+String.valueOf(size)+" MB");
+        holder.imageSize.setText("Size: "+String.valueOf(size)+" KB");
         if(imgFile.exists()){
             holder.image.setText(imgFile.getName());
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());

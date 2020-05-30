@@ -1,5 +1,4 @@
 package tk.jhordybarrera.soporteselectricaribe;
-//https://medium.com/@cvallejo/sistema-de-autenticaci%C3%B3n-api-rest-con-laravel-5-6-240be1f3fc7d
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -34,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar pb;
     private RequestQueue queue;
     private String userId;
-    AuthenticationLocal auth;
     private boolean autenticated;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,10 +43,9 @@ public class LoginActivity extends AppCompatActivity {
         user = findViewById(R.id.login_user);
         pass = findViewById(R.id.login_pass);
         pb = findViewById(R.id.login_pb);
-        auth = new AuthenticationLocal(this.getApplicationContext());
         autenticated=false;
 
-        if(auth.check_saved()){
+        if(new AuthenticationLocal(this.getApplicationContext()).check_saved()){
             autenticated=true;
             check_login();
         }
@@ -106,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(obj.has("access_token")){
                                 tk=obj.getString("access_token");
                                 tk_tp = obj.getString("token_type");
-                                get_user(tk,tk_tp);
+                                new get_user().execute(tk,tk_tp);
                             }
                         }catch(Exception e){
                             autenticated = false;
@@ -136,45 +134,59 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    public void get_user(String token,String token_type){
+    public class get_user extends AsyncTask <String,Void,Void>{
 
-        StringRequest postRequest = new StringRequest(Request.Method.GET, urlUser,
-                response -> {
-                    // response
-                    //Log.e("Response", response);
-                    try{
-                        JSONObject obj = new JSONObject(response);
-                        String id="";
-                        if(obj.has("id")){
-                            autenticated=true;//para verificar el login
-                            id=obj.getString("id");
-                            userId=id;
-                            auth.save_session(token,id);
-                            Toast.makeText(this,"Bienvenido "+obj.getString("name") + " id "+id,Toast.LENGTH_SHORT).show();
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            StringRequest postRequest = new StringRequest(Request.Method.GET, urlUser,
+                    response -> {
+                        // response
+                        //Log.e("Response", response);
+                        try{
+                            JSONObject obj = new JSONObject(response);
+                            String id;
+                            if(obj.has("id")){
+                                autenticated=true;//para verificar el login
+                                id=obj.getString("id");
+                                userId=id;
+                                new guardar_token().execute(strings[0],id);
+                                //Toast.makeText(this,"Bienvenido "+obj.getString("name") + " id "+id,Toast.LENGTH_SHORT).show();
+                            }
+                        }catch(Exception e){
+                            autenticated = false;
+                            Log.e("Error", "getting id");
                         }
-                    }catch(Exception e){
-                        autenticated = false;
-                        Log.e("Error", "getting id");
+                        check_login();
+                    },
+                    error -> {
+                        // error
+                        Log.e("Error.Response", error.getMessage());
+                        check_login();
                     }
-                    check_login();
-                },
-                error -> {
-                    // error
-                    Log.e("Error.Response", error.getMessage());
-                    check_login();
+            ){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    String authorization=strings[1]+" "+strings[0];
+                    Map<String, String>  params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Authorization", authorization);
+                    return params;
                 }
-        ){
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                String authorization=token_type+" "+token;
-                Map<String, String>  params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                params.put("Authorization", authorization);
-                return params;
-            }
-        };
+            };
+            queue.add(postRequest);
+            return null;
+        }
 
-        queue.add(postRequest);
+
+    }
+    public class guardar_token extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            new AuthenticationLocal(getApplicationContext()).save_session(strings[0],strings[1]);
+            return null;
+        }
     }
 }
 
