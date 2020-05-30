@@ -3,7 +3,9 @@ package tk.jhordybarrera.soporteselectricaribe;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -22,6 +24,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,7 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.FileProviderClass;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.GalleryAdapter;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.OSManager;
 
@@ -42,6 +44,8 @@ public class AddEditActivity extends AppCompatActivity{
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private RecyclerView imageGallery;
     private OSManager osman;
+    private String filenameTime;
+    private final String TAG = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,8 +88,50 @@ public class AddEditActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         load_data();
     }
+    /*
+    public class CompressImage extends AsyncTask<Uri,Integer,byte[]>{
+        Bitmap mBitmap;
+
+        public CompressImage(Bitmap bitmap) {
+            if(bitmap!= null)
+                this.mBitmap = bitmap;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Toast.makeText(AddEditActivity.this,"Comprimiendo imagen",Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        protected byte[] doInBackground(Uri... uris) {
+            Log.i(TAG,"Compresing image");
+            if(mBitmap== null){
+
+            }
+            byte [] bytes = null;
+            int compression=70;
+            bytes = getBytesFromBitmap(mBitmap,compression);
+            return bytes;
+        }
+
+        @Override
+        protected void onPostExecute(byte[] bytes) {
+            super.onPostExecute(bytes);
+        }
+
+    }
+    public static byte[] getBytesFromBitmap(Bitmap bitmap,int quality){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,quality,stream);
+        return stream.toByteArray();
+    }
+
+    */
     /**
      * Guardar las fotos
 
@@ -93,7 +139,7 @@ public class AddEditActivity extends AppCompatActivity{
     public String almacenamiento(){
         return photoDir + nic.getText().toString() + File.separator+os.getText().toString();
     }
-    public void add_photo_video(View v){//comprueba los permisos antes de abrir la camara
+    public void add_photo(View v){//comprueba los permisos antes de abrir la camara
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -119,6 +165,7 @@ public class AddEditActivity extends AppCompatActivity{
         }
     }
 
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -139,6 +186,7 @@ public class AddEditActivity extends AppCompatActivity{
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
+        filenameTime = imageFileName+"1025150083.jpg";
         File storageDir = new File(almacenamiento());
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -169,7 +217,7 @@ public class AddEditActivity extends AppCompatActivity{
             case MY_PERMISSIONS_REQUEST_CAMERA: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    add_photo_video(null);
+                    add_photo(null);
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.

@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
-        android:onClick="add_photo_video"
+        android:onClick="add_photo"
         app:srcCompat="@drawable/ic_photo_camera_black_24dp"
         tools:ignore="VectorDrawableCompat" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
