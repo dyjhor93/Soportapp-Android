@@ -28,10 +28,13 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import id.zelory.compressor.Compressor;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.UploadAdapter;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.UploadModel;
 import tk.jhordybarrera.soporteselectricaribe.models_and_controllers.VolleyMultipartRequest;
@@ -45,6 +48,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
     ArrayList<String> lista;
     Bitmap bitmap;
     ArrayList<UploadModel> um;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,28 +78,39 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
     @Override
     public void onItemClick(int position) {
         subir(position);
-
+        ProgressBar progress;
+        progress=recyclerViewUpload.findViewHolderForAdapterPosition(position).itemView.findViewById(R.id.carga);
+        progress.getProgressDrawable().setColorFilter(Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
+        progress.setIndeterminate(true);
 
     }
 
     public void subir(int item) {
 
-        File i = new File(lista.get(item));
-        String filePath = i.getPath();
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 40, out);
-        //imageView.setImageBitmap(bitmap);
-        uploadBitmap(item, bitmap);
+        File i = null;
+        try {
+            i = new Compressor(this).compressToFile(new File(lista.get(item)));
+            //FileWriter writer = new FileWriter(i);
+            //writer.append(sBody);
+            //writer.flush();
+            //writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-/*
-        new subir().execute(
-                nic.getText().toString(),
-                os.getText().toString(),
-                image.getText().toString(),
-                imageString
-        );
-        */
+        //File i = Compressor.compress(this, original);
+        String filePath = i.getPath();
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 3;
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath,options);
+
+        //progress.setIndeterminate(true);
+
+//        Toast.makeText(this,"Comprimiendo imagen, espere",Toast.LENGTH_SHORT).show();
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        uploadBitmap(item, bitmap);
     }
 
     private void uploadBitmap(int i, final Bitmap bitmap) {
@@ -104,13 +119,11 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         TextView nic = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.nic);
         TextView os = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.os);
         TextView image = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.image);
-        ProgressBar progress = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.carga);
+        ProgressBar progress;
+        progress=recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.carga);
         ImageView imageView = recyclerViewUpload.findViewHolderForAdapterPosition(i).itemView.findViewById(R.id.previa);
         //progress.getProgressDrawable().setColorFilter(Color.GRAY, android.graphics.PorterDuff.Mode.SRC_IN);
         new guardar().execute();
-        progress.setIndeterminate(true);
-
-
         //getting the tag from the edittext
 
         //our custom volley request
@@ -119,15 +132,18 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         progress.setIndeterminate(false);
-                        progress.getProgressDrawable().setColorFilter(
-                                Color.GREEN, android.graphics.PorterDuff.Mode.SRC_IN);
                         new guardar().execute();
 
                         try {
                             Log.e("Response.data", new String(response.data));
                             JSONObject obj = new JSONObject(new String(response.data));
                             if(obj.has("message")){
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                if(obj.getString("message").contains("required")){
+                                    progress.getProgressDrawable().setColorFilter(Color.RED, android.graphics.PorterDuff.Mode.SRC_IN);
+                                    Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                                }
+
+
                             }
 
                         } catch (Exception e) {
@@ -172,18 +188,19 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
             protected Map<String, DataPart> getByteData() {
                 Map<String, DataPart> params = new HashMap<>();
                 //long imagename = System.currentTimeMillis();
-                params.put("pic", new DataPart(image.getText().toString() + ".png", getFileDataFromDrawable(bitmap)));
+                params.put("pic", new DataPart(image.getText().toString() + ".jpg", getFileDataFromDrawable(bitmap)));
                 return params;
             }
         };
 
+        Toast.makeText(this,"Subiendo imagen, espere",Toast.LENGTH_SHORT).show();
         //adding the request to volley
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
     }
 
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
@@ -202,7 +219,9 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
                         try {
                             JSONObject obj = new JSONObject(response);
                             if (obj.has("message")) {
-                                mostrar_respuesta(obj.getString("message"));
+                                if(obj.getString("message").equalsIgnoreCase("True")){
+                                    Toast.makeText(getApplicationContext(), "Guardado nic y os en la base de datos en linea", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } catch (Exception e) {
 

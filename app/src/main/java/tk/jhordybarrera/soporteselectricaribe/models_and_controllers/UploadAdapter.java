@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import tk.jhordybarrera.soporteselectricaribe.Clickable;
@@ -43,11 +42,13 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
         holder.os.setText("os: "+os);
 
         File imgFile = new  File(ruta);
+        long size = imgFile.length()/1000000;
 
+        holder.imageSize.setText("Size: "+String.valueOf(size)+" MB");
         if(imgFile.exists()){
             holder.image.setText(imgFile.getName());
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            holder.imageSrc.setImageBitmap(myBitmap);
+            holder.imageView.setImageBitmap(myBitmap);
         }
         holder.progress.setProgress(0);
     }
@@ -60,16 +61,18 @@ public class UploadAdapter extends RecyclerView.Adapter<UploadAdapter.ViewHolder
         private TextView nic;
         private TextView os;
         private TextView image;
+        private TextView imageSize;
         private ProgressBar progress;
-        private ImageView imageSrc;
+        private ImageView imageView;
         public ViewHolder(View v) {
             super(v);
             v.setOnClickListener(v1 -> clickable.onItemClick(getLayoutPosition()));
             nic = v.findViewById(R.id.nic);
             os = v.findViewById(R.id.os);
             progress = v.findViewById(R.id.carga);
-            imageSrc = v.findViewById(R.id.previa);
+            imageView = v.findViewById(R.id.previa);
             image = v.findViewById(R.id.image);
+            imageSize = v.findViewById(R.id.imageSize);
         }
     }
 }

@@ -38,6 +38,12 @@
         android:text="image"
         android:paddingLeft="@dimen/t_tittle"
         android:id="@+id/image"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="image"
+        android:paddingLeft="@dimen/t_tittle"
+        android:id="@+id/imageSize"/>
     <ProgressBar
         android:id="@+id/carga"
         android:layout_width="match_parent"
