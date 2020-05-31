@@ -113,6 +113,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         uploadBitmap(item, bitmap);
     }
 
+    //encargado de subir a la pagina una imagen
     private void uploadBitmap(int i, final Bitmap bitmap) {
 
         //
@@ -208,6 +209,7 @@ public class UploadActivity extends AppCompatActivity implements Clickable {
         Toast.makeText(UploadActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
+    //encargado de guardar en la pagina la orden de servicio y el nic del usuario
     private class guardar extends AsyncTask<Void, Void, Void> {
     private String respuesta;
         @Override
