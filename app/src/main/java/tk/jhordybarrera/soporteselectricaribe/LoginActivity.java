@@ -55,10 +55,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void login_click(View v){
-        cargando();
+
         String u = user.getText().toString();
         String p = pass.getText().toString();
-        new loguear().execute(u, p);
+        if(u.isEmpty()||p.isEmpty()){
+            Toast.makeText(this,"Ingrese su usuario y contraseña",Toast.LENGTH_LONG).show();
+        }else {
+            cargando();
+            new loguear().execute(u, p);
+        }
     }
     public void user_test(View v){
         user.setText("usertest@soportapp.tk");
