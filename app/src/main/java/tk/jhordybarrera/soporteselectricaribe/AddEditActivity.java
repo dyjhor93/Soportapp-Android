@@ -201,72 +201,75 @@ public class AddEditActivity extends AppCompatActivity {
 
     public void save() {
 
-        //if(nic.isEnabled())
-        if (!getIntent().hasExtra("nic")) {//verificamos que no sea un existente
-            if (nic.getText().toString().isEmpty() || os.getText().toString().isEmpty()) {//verificamos que el nic no esté en blanco
-                Toast.makeText(this, "No puede estar vacio", Toast.LENGTH_SHORT).show();
-            } else {
-                //si se introdujo la orden de servicio
-                if (!os.getText().toString().isEmpty()) {
-                    if (folder()) {//verificamos el directorio antes de guardar
-                        new guardar_os().execute(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString());
-                        deactivate();//si se guardo desactivamos para evitar cambios
-                    } else {
-                        Toast.makeText(this, "No se puede usar el directorio", Toast.LENGTH_SHORT).show();
-                    }
-                } else {//si no se introdujo la orden de servicio
-                    if (folder()) {//verificamos el directorio antes de guardar
-                        new guardar_os().execute(getIntent().getStringExtra("id"),getIntent().getStringExtra("id"),"no os");
-                        deactivate();//si se guardo desactivamos para evitar cambios
-                    } else {
-                        Toast.makeText(this, "No se puede usar el directorio", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-        } else {//es un existente aplique validacion de cambios actualizacion de datos
-
-            if (nic.getText().toString().isEmpty() || os.getText().toString().isEmpty()) {//verificamos que el nic no esté en blanco
-                Toast.makeText(this, "No puede estar vacio", Toast.LENGTH_SHORT).show();
-            }else {
-                String nicNuevo = nic.getText().toString();
-
-                String osNuevo = os.getText().toString();
-                String nicViejo = getIntent().getStringExtra("nic");
-                String osViejo = getIntent().getStringExtra("os");
-
-                if (nicNuevo.isEmpty()) {
-                    Toast.makeText(this, "Nic no puede estar vacio", Toast.LENGTH_SHORT).show();
+        if(nic.isEnabled()) {
+            if (!getIntent().hasExtra("nic")) {//verificamos que no sea un existente
+                if (nic.getText().toString().isEmpty() || os.getText().toString().isEmpty()) {//verificamos que el nic no esté en blanco
+                    Toast.makeText(this, "No puede estar vacio", Toast.LENGTH_SHORT).show();
                 } else {
-                    boolean actualizar = false;
-                    //Si cambio la orden de servicio
-                    if (!getIntent().getStringExtra("os").equals(os.getText().toString())) {
-                        if (os.getText().toString().isEmpty()) {
-                            osNuevo = "no os";
+                    //si se introdujo la orden de servicio
+                    if (!os.getText().toString().isEmpty()) {
+                        if (folder()) {//verificamos el directorio antes de guardar
+                            new guardar_os().execute(getIntent().getStringExtra("id"), os.getText().toString(), nic.getText().toString());
+                            deactivate();//si se guardo desactivamos para evitar cambios
+                        } else {
+                            Toast.makeText(this, "No se puede usar el directorio", Toast.LENGTH_SHORT).show();
                         }
-                        move_folder(
-                                new File(photoDir + nicViejo + File.separator + osViejo),
-                                new File(photoDir + nicViejo + File.separator + osNuevo)
-                        );
-                        actualizar = true;
-                    }
-                    //si cambio el nic
-                    if (!getIntent().getStringExtra("nic").equals(nic.getText().toString())) {
-                        move_folder(
-                                new File(photoDir + nicViejo),
-                                new File(photoDir + nicNuevo)
-                        );
-                        actualizar = true;
+                    } else {//si no se introdujo la orden de servicio
+                        if (folder()) {//verificamos el directorio antes de guardar
+                            new guardar_os().execute(getIntent().getStringExtra("id"), getIntent().getStringExtra("id"), "no os");
+                            deactivate();//si se guardo desactivamos para evitar cambios
+                        } else {
+                            Toast.makeText(this, "No se puede usar el directorio", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
-                    if (actualizar) {
-                        Toast.makeText(this, "Se actualizo la orden de servicio", Toast.LENGTH_SHORT).show();
-                        //validar cambios de directorio antes de actualizar la base de datos
-                        new OSManager(getApplicationContext()).update_os(getIntent().getStringExtra("id"), osNuevo, nicNuevo, nicViejo);
-                        deactivate();
+                }
+            } else {//es un existente aplique validacion de cambios actualizacion de datos
+
+                if (nic.getText().toString().isEmpty() || os.getText().toString().isEmpty()) {//verificamos que el nic no esté en blanco
+                    Toast.makeText(this, "No puede estar vacio", Toast.LENGTH_SHORT).show();
+                } else {
+                    String nicNuevo = nic.getText().toString();
+
+                    String osNuevo = os.getText().toString();
+                    String nicViejo = getIntent().getStringExtra("nic");
+                    String osViejo = getIntent().getStringExtra("os");
+
+                    if (nicNuevo.isEmpty()) {
+                        Toast.makeText(this, "Nic no puede estar vacio", Toast.LENGTH_SHORT).show();
+                    } else {
+                        boolean actualizar = false;
+                        //Si cambio la orden de servicio
+                        if (!getIntent().getStringExtra("os").equals(os.getText().toString())) {
+                            if (os.getText().toString().isEmpty()) {
+                                osNuevo = "no os";
+                            }
+                            move_folder(
+                                    new File(photoDir + nicViejo + File.separator + osViejo),
+                                    new File(photoDir + nicViejo + File.separator + osNuevo)
+                            );
+                            actualizar = true;
+                        }
+                        //si cambio el nic
+                        if (!getIntent().getStringExtra("nic").equals(nic.getText().toString())) {
+                            move_folder(
+                                    new File(photoDir + nicViejo),
+                                    new File(photoDir + nicNuevo)
+                            );
+                            actualizar = true;
+                        }
+
+                        if (actualizar) {
+                            Toast.makeText(this, "Se actualizo la orden de servicio", Toast.LENGTH_SHORT).show();
+                            //validar cambios de directorio antes de actualizar la base de datos
+                            new OSManager(getApplicationContext()).update_os(getIntent().getStringExtra("id"), osNuevo, nicNuevo, nicViejo);
+                            deactivate();
+                        }
                     }
                 }
             }
+        }else{
+            Toast.makeText(this, "Orden de servicio ya ha sido guardada", Toast.LENGTH_SHORT).show();
         }
         load_data();
     }
